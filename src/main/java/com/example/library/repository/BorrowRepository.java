@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public interface BorrowRepository extends JpaRepository<Borrow, Long> {
 
@@ -16,6 +17,9 @@ public interface BorrowRepository extends JpaRepository<Borrow, Long> {
     boolean existsByBookIdAndEmailAndReturnDateIsNull(Long bookId, String email);
 
     boolean existsByBookId(Long bookId);
+
+    @EntityGraph(attributePaths = "book")
+    Optional<Borrow> findWithBookById(Long id);
 
     long countByReturnDateIsNull();
 
