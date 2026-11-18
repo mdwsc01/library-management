@@ -1,4 +1,4 @@
-# 📚 Mini web quản lý thư viện
+﻿# 📚 Mini web quản lý thư viện
 
 Ứng dụng web render phía server để quản lý sách, thể loại và lượt mượn/trả.
 
@@ -192,11 +192,11 @@ Nguyên tắc chính:
 
 | Trang | Ảnh |
 |-------|-----|
-| Danh sách sách (tìm kiếm, lọc, phân trang, sắp xếp) | ![Danh sách sách](docs/screenshots/01-books-list.png) |
-| Form thêm sách – hiển thị lỗi từng trường | ![Form lỗi](docs/screenshots/02-book-form-errors.png) |
-| Xác nhận xoá | ![Xác nhận xoá](docs/screenshots/03-delete-confirm.png) |
-| Danh sách thể loại | ![Thể loại](docs/screenshots/04-categories.png) |
-| Form mượn sách – lỗi mượn trùng | ![Mượn trùng](docs/screenshots/05-borrow-duplicate.png) |
-| Danh sách đang mượn – đánh dấu quá hạn | ![Đang mượn](docs/screenshots/06-borrows-overdue.png) |
-| Thông báo thành công sau thao tác | ![Thông báo](docs/screenshots/07-flash-success.png) |
-| Trang 404 | ![404](docs/screenshots/08-not-found.png) |
+| Danh sách sách (tìm kiếm, lọc, phân trang, sắp xếp) | ![Danh sách sách](docs/screenshots/01-books-list.jpg) |
+| Form thêm sách – hiển thị lỗi từng trường | ![Form lỗi](docs/screenshots/02-book-form-errors.jpg) |
+| Xác nhận xoá | ![Xác nhận xoá](docs/screenshots/03-delete-confirm.jpg) |
+| Danh sách thể loại | ![Thể loại](docs/screenshots/04-categories.jpg) |
+| Form mượn sách – lỗi mượn trùng | ![Mượn trùng](docs/screenshots/05-borrow-duplicate.jpg) |
+| Danh sách đang mượn – đánh dấu quá hạn | ![Đang mượn](docs/screenshots/06-borrows-overdue.jpg) |
+| Thông báo thành công sau thao tác | ![Thông báo](docs/screenshots/07-flash-success.jpg) |
+| Trang 404 | ![404](docs/screenshots/08-not-found.jpg) |
