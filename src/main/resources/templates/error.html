@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Có lỗi xảy ra')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('')}"></nav>
+
+<!-- Trang lỗi chung cho các mã lỗi khác 404 (Spring Boot BasicErrorController) -->
+<main class="container text-center py-5">
+    <div class="error-code text-danger" th:text="${status} ?: 'Lỗi'">500</div>
+    <h1 class="h3 mt-3">Đã có lỗi xảy ra</h1>
+    <p class="text-muted">Xin lỗi, hệ thống gặp sự cố khi xử lý yêu cầu. Vui lòng thử lại sau.</p>
+    <a class="btn btn-primary mt-3" th:href="@{/books}"><i class="bi bi-house"></i> Về trang sách</a>
+</main>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${bookForm.isNew()} ? 'Thêm sách' : 'Sửa sách')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('books')}"></nav>
+
+<main class="container" style="max-width: 760px">
+    <h1 class="h3 mb-3" th:text="${bookForm.isNew()} ? 'Thêm sách mới' : 'Sửa sách'">Thêm sách mới</h1>
+
+    <form class="card card-body" method="post" novalidate th:object="${bookForm}"
+          th:action="${bookForm.isNew()} ? @{/books} : @{/books/{id}(id=*{id})}">
+
+        <!-- Lỗi không gắn với trường nào -->
+        <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+            <p class="mb-0" th:each="err : ${#fields.globalErrors()}" th:text="${err}">Lỗi</p>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label" for="code">Mã sách <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" th:field="*{code}" th:errorclass="is-invalid"
+                       placeholder="VD: IT006">
+                <div class="invalid-feedback" th:errors="*{code}">Lỗi mã</div>
+            </div>
+            <div class="col-md-8">
+                <label class="form-label" for="title">Tên sách <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" th:field="*{title}" th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:errors="*{title}">Lỗi tên</div>
+            </div>
+            <div class="col-md-8">
+                <label class="form-label" for="author">Tác giả <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" th:field="*{author}" th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:errors="*{author}">Lỗi tác giả</div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="publishYear">Năm xuất bản <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" th:field="*{publishYear}" th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:errors="*{publishYear}">Lỗi năm</div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="quantity">Số lượng trong kho <span class="text-danger">*</span></label>
+                <input type="number" min="0" class="form-control" th:field="*{quantity}" th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:errors="*{quantity}">Lỗi số lượng</div>
+            </div>
+            <div class="col-md-8">
+                <label class="form-label" for="categoryId">Thể loại <span class="text-danger">*</span></label>
+                <select class="form-select" th:field="*{categoryId}" th:errorclass="is-invalid">
+                    <option value="">-- Chọn thể loại --</option>
+                    <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}">CNTT</option>
+                </select>
+                <div class="invalid-feedback" th:errors="*{categoryId}">Lỗi thể loại</div>
+                <div class="form-text" th:if="${categories.empty}">
+                    Chưa có thể loại nào — <a th:href="@{/categories/new}">thêm thể loại</a> trước.
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Lưu</button>
+            <a class="btn btn-outline-secondary" th:href="@{/books}">Huỷ</a>
+        </div>
+    </form>
+</main>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

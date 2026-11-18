@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Thể loại')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('categories')}"></nav>
+
+<main class="container" style="max-width: 860px">
+    <div th:replace="~{fragments/layout :: flash}"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Thể loại</h1>
+        <a class="btn btn-primary" th:href="@{/categories/new}"><i class="bi bi-plus-lg"></i> Thêm thể loại</a>
+    </div>
+
+    <div class="card">
+        <table class="table table-hover mb-0" th:if="${!categories.empty}">
+            <thead class="table-light">
+            <tr>
+                <th style="width: 60px">#</th>
+                <th>Tên thể loại</th>
+                <th>Số sách</th>
+                <th class="text-end">Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c, stat : ${categories}">
+                <td th:text="${stat.count}">1</td>
+                <td class="fw-semibold" th:text="${c.name}">CNTT</td>
+                <td>
+                    <a th:href="@{/books(categoryId=${c.id})}" th:text="|${c.bookCount} sách|">5 sách</a>
+                </td>
+                <td class="text-end text-nowrap">
+                    <a class="btn btn-sm btn-outline-primary" th:href="@{/categories/{id}/edit(id=${c.id})}" title="Sửa">
+                        <i class="bi bi-pencil"></i></a>
+                    <form class="d-inline" method="post" th:action="@{/categories/{id}/delete(id=${c.id})}"
+                          th:data-confirm="|Bạn chắc chắn muốn xoá thể loại '${c.name}'?|">
+                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                th:title="${c.deletable} ? 'Xoá' : 'Còn sách thuộc thể loại này'">
+                            <i class="bi bi-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${categories.empty}" class="text-center text-muted py-5">Chưa có thể loại nào.</div>
+    </div>
+</main>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Danh sách sách')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('books')}"></nav>
+
+<main class="container">
+    <div th:replace="~{fragments/layout :: flash}"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Danh sách sách</h1>
+        <a class="btn btn-primary" th:href="@{/books/new}"><i class="bi bi-plus-lg"></i> Thêm sách</a>
+    </div>
+
+    <!-- Tìm kiếm + lọc -->
+    <form class="card card-body mb-3" th:action="@{/books}" method="get">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label" for="q">Tìm theo tên hoặc tác giả</label>
+                <input type="text" id="q" name="q" class="form-control" placeholder="VD: Clean Code, Tô Hoài..."
+                       th:value="${criteria.keyword()}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="categoryId">Thể loại</label>
+                <select id="categoryId" name="categoryId" class="form-select">
+                    <option value="">-- Tất cả --</option>
+                    <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"
+                            th:selected="${c.id == criteria.categoryId()}">CNTT</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="size">Số dòng / trang</label>
+                <select id="size" name="size" class="form-select">
+                    <option th:each="s : ${ {5, 10, 20} }" th:value="${s}" th:text="${s}"
+                            th:selected="${s == criteria.size()}">5</option>
+                </select>
+            </div>
+            <input type="hidden" name="sort" th:value="${criteria.sort()}">
+            <input type="hidden" name="dir" th:value="${criteria.direction()}">
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-outline-primary flex-fill"><i class="bi bi-search"></i> Tìm</button>
+                <a class="btn btn-outline-secondary" th:href="@{/books}" title="Xoá bộ lọc"><i class="bi bi-x-lg"></i></a>
+            </div>
+        </div>
+    </form>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <!-- Bảng sách; tiêu đề cột bấm để sắp xếp -->
+            <table class="table table-hover mb-0" th:if="${!books.empty}">
+                <thead class="table-light">
+                <tr>
+                    <th th:each="col : ${ {'code', 'title', 'author', 'publishYear', 'quantity'} }">
+                        <a th:href="${@urls.sort(col, criteria.sort() == col ? criteria.reverseDirection() : 'asc')}">
+                            <span th:switch="${col}">
+                                <span th:case="'code'">Mã</span>
+                                <span th:case="'title'">Tên sách</span>
+                                <span th:case="'author'">Tác giả</span>
+                                <span th:case="'publishYear'">Năm XB</span>
+                                <span th:case="'quantity'">Còn lại</span>
+                            </span>
+                            <i th:if="${criteria.sort() == col}"
+                               th:class="${criteria.direction() == 'asc'} ? 'bi bi-sort-up' : 'bi bi-sort-down'"></i>
+                        </a>
+                    </th>
+                    <th>Thể loại</th>
+                    <th class="text-end">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="b : ${books.content}">
+                    <td><code th:text="${b.code}">IT001</code></td>
+                    <td class="fw-semibold" th:text="${b.title}">Clean Code</td>
+                    <td th:text="${b.author}">Robert C. Martin</td>
+                    <td th:text="${b.publishYear}">2008</td>
+                    <td>
+                        <span th:if="${b.available}" class="badge text-bg-success" th:text="${b.quantity}">5</span>
+                        <span th:unless="${b.available}" class="badge text-bg-secondary">Hết sách</span>
+                    </td>
+                    <td th:text="${b.category.name}">CNTT</td>
+                    <td class="text-end text-nowrap">
+                        <a th:if="${b.available}" class="btn btn-sm btn-success"
+                           th:href="@{/borrows/new(bookId=${b.id})}" title="Cho mượn">
+                            <i class="bi bi-box-arrow-up-right"></i> Mượn</a>
+                        <button th:unless="${b.available}" class="btn btn-sm btn-outline-secondary" disabled
+                                title="Hết sách, không thể mượn"><i class="bi bi-slash-circle"></i> Mượn</button>
+                        <a class="btn btn-sm btn-outline-primary" th:href="@{/books/{id}/edit(id=${b.id})}" title="Sửa">
+                            <i class="bi bi-pencil"></i></a>
+                        <form class="d-inline" method="post" th:action="@{/books/{id}/delete(id=${b.id})}"
+                              th:data-confirm="|Bạn chắc chắn muốn xoá sách '${b.title}'?|">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Xoá">
+                                <i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${books.empty}" class="text-center text-muted py-5">
+                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                Không tìm thấy sách nào phù hợp.
+            </div>
+        </div>
+        <div class="card-footer bg-white d-flex flex-wrap justify-content-between align-items-center gap-2"
+             th:if="${!books.empty}">
+            <small class="text-muted"
+                   th:text="|Hiển thị ${books.number * books.size + 1}–${books.number * books.size + books.numberOfElements} / ${books.totalElements} sách|">
+                Hiển thị 1–5 / 15 sách</small>
+            <nav th:replace="~{fragments/layout :: pagination(${books})}"></nav>
+        </div>
+    </div>
+</main>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Mượn / Trả')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('borrows')}"></nav>
+
+<main class="container">
+    <div th:replace="~{fragments/layout :: flash}"></div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Mượn / Trả sách</h1>
+        <a class="btn btn-primary" th:href="@{/borrows/new}"><i class="bi bi-plus-lg"></i> Tạo phiếu mượn</a>
+    </div>
+
+    <!-- Tab lọc theo trạng thái -->
+    <ul class="nav nav-pills mb-3">
+        <li class="nav-item" th:each="s : ${statuses}">
+            <a class="nav-link" th:classappend="${s == status} ? 'active'"
+               th:href="@{/borrows(status=${#strings.toLowerCase(s.name())})}">
+                <span th:text="${s.label}">Đang mượn</span>
+                <span th:if="${s.name() == 'ACTIVE'}" class="badge text-bg-light ms-1" th:text="${activeCount}">2</span>
+                <span th:if="${s.name() == 'OVERDUE'}" class="badge text-bg-danger ms-1" th:text="${overdueCount}">1</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0" th:if="${!borrows.empty}">
+                <thead class="table-light">
+                <tr>
+                    <th>Sách</th>
+                    <th>Người mượn</th>
+                    <th>Email</th>
+                    <th>Ngày mượn</th>
+                    <th>Hạn trả</th>
+                    <th>Trạng thái</th>
+                    <th class="text-end" th:if="${status.name() != 'RETURNED'}">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="br : ${borrows.content}" th:classappend="${br.isOverdue(today)} ? 'row-overdue'">
+                    <td>
+                        <code th:text="${br.book.code}">IT001</code>
+                        <span class="fw-semibold" th:text="${br.book.title}">Clean Code</span>
+                    </td>
+                    <td th:text="${br.borrowerName}">Nguyễn Văn An</td>
+                    <td th:text="${br.email}">an@example.com</td>
+                    <td th:text="${#temporals.format(br.borrowDate, 'dd/MM/yyyy')}">01/11/2026</td>
+                    <td th:text="${#temporals.format(br.dueDate, 'dd/MM/yyyy')}">15/11/2026</td>
+                    <td>
+                        <span th:if="${br.returned}" class="badge text-bg-secondary"
+                              th:text="|Đã trả ${#temporals.format(br.returnDate, 'dd/MM/yyyy')}|">Đã trả</span>
+                        <span th:if="${br.isOverdue(today)}" class="badge text-bg-danger"
+                              th:text="|Quá hạn ${br.overdueDays(today)} ngày|">Quá hạn</span>
+                        <span th:if="${!br.returned and !br.isOverdue(today)}" class="badge text-bg-success">Đang mượn</span>
+                    </td>
+                    <td class="text-end" th:if="${status.name() != 'RETURNED'}">
+                        <form class="d-inline" method="post" th:action="@{/borrows/{id}/return(id=${br.id})}"
+                              th:data-confirm="|Xác nhận ${br.borrowerName} trả sách '${br.book.title}'?|">
+                            <button type="submit" class="btn btn-sm btn-outline-success">
+                                <i class="bi bi-box-arrow-in-down-left"></i> Trả sách</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${borrows.empty}" class="text-center text-muted py-5">
+                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                Không có lượt mượn nào.
+            </div>
+        </div>
+        <div class="card-footer bg-white" th:if="${borrows.totalPages > 1}">
+            <nav th:replace="~{fragments/layout :: pagination(${borrows})}"></nav>
+        </div>
+    </div>
+</main>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Tạo phiếu mượn')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('borrows')}"></nav>
+
+<main class="container" style="max-width: 640px">
+    <h1 class="h3 mb-3">Tạo phiếu mượn</h1>
+
+    <form class="card card-body" method="post" novalidate th:action="@{/borrows}" th:object="${borrowForm}">
+
+        <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+            <p class="mb-0" th:each="err : ${#fields.globalErrors()}" th:text="${err}">Lỗi</p>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="bookId">Sách <span class="text-danger">*</span></label>
+            <select class="form-select" th:field="*{bookId}" th:errorclass="is-invalid">
+                <option value="">-- Chọn sách còn trong kho --</option>
+                <option th:each="b : ${availableBooks}" th:value="${b.id}"
+                        th:text="|${b.code} - ${b.title} (còn ${b.quantity})|">IT001 - Clean Code (còn 5)</option>
+            </select>
+            <div class="invalid-feedback" th:errors="*{bookId}">Lỗi sách</div>
+            <div class="form-text">Chỉ hiển thị sách còn số lượng &gt; 0.</div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="borrowerName">Tên người mượn <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" th:field="*{borrowerName}" th:errorclass="is-invalid">
+            <div class="invalid-feedback" th:errors="*{borrowerName}">Lỗi tên</div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
+            <input type="email" class="form-control" th:field="*{email}" th:errorclass="is-invalid"
+                   placeholder="ten@example.com">
+            <div class="invalid-feedback" th:errors="*{email}">Lỗi email</div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="dueDate">Hạn trả <span class="text-danger">*</span></label>
+            <input type="date" class="form-control" th:field="*{dueDate}" th:errorclass="is-invalid">
+            <div class="invalid-feedback" th:errors="*{dueDate}">Lỗi hạn trả</div>
+            <div class="form-text">Ngày mượn được ghi nhận là hôm nay.</div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Xác nhận mượn</button>
+            <a class="btn btn-outline-secondary" th:href="@{/borrows}">Huỷ</a>
+        </div>
+    </form>
+</main>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,32 @@
+body {
+    background-color: #f5f7fb;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+}
+
+.table th a {
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.table th a:hover {
+    text-decoration: underline;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.row-overdue {
+    --bs-table-bg: #fff1f0;
+}
+
+.error-code {
+    font-size: 6rem;
+    font-weight: 700;
+    line-height: 1;
+}

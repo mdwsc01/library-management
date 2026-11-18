@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${categoryForm.isNew()} ? 'Thêm thể loại' : 'Sửa thể loại')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('categories')}"></nav>
+
+<main class="container" style="max-width: 560px">
+    <h1 class="h3 mb-3" th:text="${categoryForm.isNew()} ? 'Thêm thể loại' : 'Sửa thể loại'">Thêm thể loại</h1>
+
+    <form class="card card-body" method="post" novalidate th:object="${categoryForm}"
+          th:action="${categoryForm.isNew()} ? @{/categories} : @{/categories/{id}(id=*{id})}">
+
+        <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+            <p class="mb-0" th:each="err : ${#fields.globalErrors()}" th:text="${err}">Lỗi</p>
+        </div>
+
+        <label class="form-label" for="name">Tên thể loại <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" th:field="*{name}" th:errorclass="is-invalid" autofocus>
+        <div class="invalid-feedback" th:errors="*{name}">Lỗi tên</div>
+
+        <div class="mt-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Lưu</button>
+            <a class="btn btn-outline-secondary" th:href="@{/categories}">Huỷ</a>
+        </div>
+    </form>
+</main>
+
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
