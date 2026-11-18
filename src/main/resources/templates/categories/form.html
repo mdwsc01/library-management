@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head(${categoryForm.isNew()} ? 'Thêm thể loại' : 'Sửa thể loại')}"></head>
+<head th:replace="~{fragments/layout :: head(${categoryForm.isNew() ? 'Thêm thể loại' : 'Sửa thể loại'})}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar('categories')}"></nav>
 
