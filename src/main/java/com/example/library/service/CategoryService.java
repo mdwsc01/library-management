@@ -1,6 +1,7 @@
 package com.example.library.service;
 
 import com.example.library.dto.CategoryForm;
+import com.example.library.dto.CategoryView;
 import com.example.library.entity.Category;
 import com.example.library.exception.BusinessException;
 import com.example.library.exception.ResourceNotFoundException;
@@ -32,8 +33,8 @@ public class CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("thể loại", id));
     }
 
-    public long countBooks(Long categoryId) {
-        return bookRepository.countByCategoryId(categoryId);
+    public List<CategoryView> findAllWithBookCount() {
+        return categoryRepository.findAllWithBookCount();
     }
 
     @Transactional
